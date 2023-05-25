@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include closing_period *.css
+recursive-include closing_period *.csv
+recursive-include closing_period *.html
+recursive-include closing_period *.ico
+recursive-include closing_period *.js
+recursive-include closing_period *.json
+recursive-include closing_period *.md
+recursive-include closing_period *.png
+recursive-include closing_period *.py
+recursive-include closing_period *.svg
+recursive-include closing_period *.txt
+recursive-exclude closing_period *.pyc
