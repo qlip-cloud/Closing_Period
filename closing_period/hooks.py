@@ -85,6 +85,10 @@ app_license = "MIT"
 # 	"ToDo": "custom_app.overrides.CustomToDo"
 # }
 
+override_doctype_class = {
+	"Period Closing Voucher": "closing_period.overrides.QlipPeriodClosingVoucher"
+}
+
 # Document Events
 # ---------------
 # Hook on document methods and events
