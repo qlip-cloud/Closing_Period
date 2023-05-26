@@ -5,10 +5,10 @@ from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import g
 
 class QlipPeriodClosingVoucher(PeriodClosingVoucher):
 
+    # TODO: Agregar libro de finanzas al crear los GL Entry
+
     def get_pl_balances(self):
         """Get balance for dimension-wise pl accounts"""
-
-        print("******************* herencia **************************")
 
         dimension_fields = ['t1.cost_center']
 
@@ -19,17 +19,19 @@ class QlipPeriodClosingVoucher(PeriodClosingVoucher):
         if self.qp_finance_book:
             cond_finance_book = "t1.finance_book = '{}'".format(self.qp_finance_book)
         else:
-            cond_finance_book = "t1.finance_book is null"
+            cond_finance_book = "(t1.finance_book in ('') OR t1.finance_book IS NULL)"
 
-        return frappe.db.sql("""
+        sql_test = """
             select
                 t1.account, t2.account_currency, {dimension_fields},
                 sum(t1.debit_in_account_currency) - sum(t1.credit_in_account_currency) as bal_in_account_currency,
                 sum(t1.debit) - sum(t1.credit) as bal_in_company_currency
             from `tabGL Entry` t1, `tabAccount` t2
             where t1.account = t2.name and t2.report_type = 'Profit and Loss'
-            and t2.docstatus < 2 and t2.company = %s
-            and t1.posting_date between %s and %s
-            and %s
+            and t2.docstatus < 2 and t2.company = '{comp}'
+            and t1.posting_date between '{fech_d}' and '{fech_h}'
+            and {cond_fb}
             group by t1.account, {dimension_fields}
-        """.format(dimension_fields = ', '.join(dimension_fields)), (self.company, self.get("year_start_date"), self.posting_date, cond_finance_book), as_dict=1)
+        """.format(dimension_fields = ', '.join(dimension_fields), comp = self.company, fech_d = self.get("year_start_date"), fech_h = self.posting_date, cond_fb= cond_finance_book)
+
+        return frappe.db.sql(sql_test, as_dict=1)
