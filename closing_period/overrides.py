@@ -5,7 +5,20 @@ from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import g
 
 class QlipPeriodClosingVoucher(PeriodClosingVoucher):
 
-    # TODO: Agregar libro de finanzas al crear los GL Entry
+    def on_submit(self):
+
+        super(QlipPeriodClosingVoucher, self).on_submit()
+
+        if self.qp_finance_book:
+            sql_upd = """
+                UPDATE `tabGL Entry` SET finance_book = '{cond_fb}'
+                where voucher_no = '{cond_pcv}'
+            """.format(cond_fb=self.qp_finance_book, cond_pcv=self.name)
+
+            print("sql_upd--->>>", sql_upd)
+
+            frappe.db.sql(sql_upd)
+
 
     def get_pl_balances(self):
         """Get balance for dimension-wise pl accounts"""
