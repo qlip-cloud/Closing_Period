@@ -36,6 +36,10 @@ app_license = "MIT"
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
+doctype_list_js = {
+    "Period Closing Voucher" : "public/js/closing_period_ledger.js"
+}
+
 # Home Pages
 # ----------
 
